@@ -1,0 +1,95 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+
+    <link rel="stylesheet" href="/Contact_List/assets/css/home.css">
+
+</head>
+<body>
+
+    <div id="app">
+
+        <div id="contact-display">
+
+            <h1> <i class="fas fa-id-card"></i> Contact List</h1>
+
+            <section id="label">
+
+                <span>
+                    <i class="fas fa-user-circle"></i> Contacts
+                </span>
+
+                <span>
+                    <i class="fas fa-star"></i> Favourites
+                </span>
+
+            </section>
+    
+                <ul id="contact-list">
+    
+                    <% for (let contact of contact_list){ %>
+                        
+                        <li>
+                            <span class="details lg" id="list-name">
+                                <p id="contact-name"> <%= contact.name %> </p>
+                            </span>
+
+                            <span class="details lg" id="list-phone">
+                                <p id="contact-phone"> <%= contact.phone %> </p>
+                            </span>
+                            
+                            <span class="details sm" id="list-delete">
+                                <!-- add a route in href -->
+                                <a href="/delete-contact/?phone=<%= contact.phone %>&name=<%= contact.name %>">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </span>
+
+                            <span class="details sm" id="list-favourite">
+                                <a>
+                                    <i class="far fa-star"></i>
+                                </a>
+                            </span>
+                            
+                        </li>
+    
+                    <% } %>
+    
+                </ul>
+
+            <section id="end-label"></section>
+    
+        </div>
+    
+        <div id="utilities">
+
+            <h2 id="create-new-contact-heading">CREATE NEW CONTACT</h2>
+    
+            <div id="form">
+    
+                <form action="create-contact" method="POST">
+        
+                    <input type="text" name="name" placeholder="Name" required>
+                    <input type="number" name="phone" placeholder="Phone No" required>
+                    
+                    <button type="submit">ADD</button>
+            
+                </form>
+        
+            </div>
+    
+        </div>
+
+
+    </div>
+
+    <script src="/Contact_List/assets/js/home.js"></script>
+    <script src="https://kit.fontawesome.com/8e594f6fe3.js" crossorigin="anonymous"></script>
+
+</body>
+</html>

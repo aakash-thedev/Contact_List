@@ -1,0 +1,49 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+</head>
+<body>
+
+    <h1>Working fine !</h1>
+
+    <ul>
+
+        <!-- for loop using ejs to make li -->
+        <% for(let i=1; i<6; i++){ %>
+            <li>
+                <%= i %>
+            </li>
+        <%}%>
+
+        <!-- if else statement on ejs -->
+        <% if(true) { %>
+
+            <h1>How you doin ?</h1>
+            
+        <% } else { %>
+            
+            <h1>I knowww !!</h1>
+
+        <% } %>
+
+        <!-- while loop in ejs -->
+        
+        <% let i = 0; %>
+
+        <% while(i++ < 10) { %>
+
+            <p>
+                <%= i %> 
+            </p>
+
+        <% } %> 
+
+    </ul>
+    
+</body>
+</html>
