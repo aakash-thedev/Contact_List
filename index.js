@@ -70,7 +70,9 @@ var contactList = [
         phone : "1111001111"
     }
 
-]
+];
+
+var favouriteList = [];
 
 // ---------------- HOME SERVER --------------//
 
@@ -137,6 +139,48 @@ app.get('/delete-contact/', (req, res) => {
     contactList.splice(deleteContactIndex, 1);
 
     return res.redirect('back');
+
+});
+
+// ------------ favorite contact ---------
+
+app.get('/favourites', (req, res) => {
+
+    return res.render('home', {
+
+        title : "Contact List",
+        contact_list : favouriteList
+    
+    });
+
+});
+
+// ------------- adding to favourites ----------- //
+
+// 
+
+app.get('/add-to-favourites/', (req, res) => {
+
+    console.log(req.query);
+
+    if(favouriteList.includes(req.query)){
+        
+        let index = favouriteList.findIndex((contact, name) => {
+            return contact.phone == req.query.phone && name.name == req.query.name;
+        });
+
+        favouriteList.splice(index, 1);
+
+        return res.redirect('/favourites');
+    }
+
+    else{
+
+        favouriteList.push(req.query);
+
+        res.redirect('back');
+
+    }
 
 });
 

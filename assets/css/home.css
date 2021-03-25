@@ -11,6 +11,10 @@ html {
     width: 0px;
 }
 
+a{
+    text-decoration: none;
+}
+
 body{
     margin: 0;
     padding: 0;
@@ -26,6 +30,18 @@ body{
     justify-content: space-around;
     align-items: center;
     flex-wrap: wrap-reverse;
+}
+
+.tab{
+    color: grey;
+}
+
+.tab:hover{
+    color: rgb(19, 18, 18);
+}
+
+a.tab:active{
+    color: red;
 }
 
 #label{
@@ -48,6 +64,7 @@ body{
 h1{
     color: grey;
     text-align: center;
+    margin-bottom: 12%;
 }
 
 .fa-id-card{
@@ -93,7 +110,9 @@ div ul li {
 }
 
 div ul li:hover {
-    background-color: rgb(243, 243, 243);
+    background-color: rgb(67, 152, 185);
+    color: white;
+    font-weight: bolder;
 }
 
 .lg{
@@ -209,4 +228,8 @@ div ul li:hover {
         /* margin-left: -7.9%; */
         font-size: 10px;
     }
+}
+
+.list_favourite{
+    cursor: pointer;
 }

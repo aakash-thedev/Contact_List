@@ -21,11 +21,19 @@
             <section id="label">
 
                 <span>
-                    <i class="fas fa-user-circle"></i> Contacts
+                    <a href="/" class="tab">
+                        <span>
+                            <i class="fas fa-user-circle"></i> All Contacts
+                        </span>
+                    </a>
                 </span>
 
                 <span>
-                    <i class="fas fa-star"></i> Favourites
+                    <a href="/favourites" class="tab">
+                        <span>
+                            <i class="fas fa-star"></i> Favourites
+                        </span>
+                    </a>
                 </span>
 
             </section>
@@ -50,8 +58,8 @@
                                 </a>
                             </span>
 
-                            <span class="details sm" id="list-favourite">
-                                <a>
+                            <span class="details sm list_favourite">
+                                <a href="/add-to-favourites/?phone=<%= contact.phone %>&name=<%= contact.name %>">
                                     <i class="far fa-star"></i>
                                 </a>
                             </span>
