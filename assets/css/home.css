@@ -162,7 +162,6 @@ div ul li:hover {
     height: 60px;
     width: 450px;
     display: flex;
-    /* border: 1px solid grey; */
     justify-content: space-evenly;
     align-items: center;
     padding: 10px;

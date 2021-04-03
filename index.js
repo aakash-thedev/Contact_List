@@ -2,7 +2,10 @@
 
 const express = require('express');
 const path = require('path'); // we do not need to install path module because its inbuilt in node modules
-const port = process.env.port || 8005;
+const port = process.env.port || 8000;
+const db = require('./config/mongoose.js');
+
+const Contact = require('./models/contact');
 
 // call express() function to create an express app.
 const app = express();
@@ -38,39 +41,39 @@ app.use('*/assets', express.static(__dirname + '/assets'));
 
 // });
 
-var contactList = [
+// var contactList = [
 
-    {
-        name : "Aakash",
-        phone : "8840010480"
-    },
+//     {
+//         name : "Aakash",
+//         phone : "8840010480"
+//     },
 
-    {
-        name : "Kopal",
-        phone : "1234567890"
-    },
+//     {
+//         name : "Kopal",
+//         phone : "1234567890"
+//     },
 
-    {
-        name : "Thor",
-        phone : "1111001111"
-    },
+//     {
+//         name : "Thor",
+//         phone : "1111001111"
+//     },
 
-    {
-        name : "Joey",
-        phone : "1111001111"
-    },
+//     {
+//         name : "Joey",
+//         phone : "1111001111"
+//     },
 
-    {
-        name : "Chan",
-        phone : "1111001111"
-    },
+//     {
+//         name : "Chan",
+//         phone : "1111001111"
+//     },
 
-    {
-        name : "Ross",
-        phone : "1111001111"
-    }
+//     {
+//         name : "Ross",
+//         phone : "1111001111"
+//     }
 
-];
+// ];
 
 var favouriteList = [];
 
@@ -84,11 +87,22 @@ app.get('/', (req, res) => {
     // res.end('<h1> Express Server </h1>');
     // to pass any data from server to html
     // we pass it as an object (key value pair)
-    return res.render('home', {
 
-        title : "Contact List",
-        contact_list : contactList
-    
+    // fetching from database
+    Contact.AllContact.find({}, function(err, contactList) {
+        if(err){
+            console.log("Error fetching contacts from database");
+            return;
+        }
+
+        return res.render('home', {
+
+            title : "Contact List",
+            contact_list : contactList
+
+        
+        });
+
     });
 
 });
@@ -100,11 +114,29 @@ app.post('/create-contact', (req, res) => {
     // render function searches an ejs file in views folder 
     // there is another function redirects
     // redirects function tells browser to take me to this given url
+
     console.log(req.body);
 
-    contactList.push(req.body);
+    // contactList.push(req.body);
+    // instead of pushing it into array
+    // push it into database directly
+    Contact.AllContact.create({
 
-    return res.redirect('/');
+        name : req.body.name,
+        phone : req.body.phone
+
+    }, function(err, newContact) {
+
+        if(err){
+            console.log("Error creating a contact");
+            return;
+        }
+
+        console.log("*****", newContact);
+
+        return res.redirect('back');
+
+    });
 
 });
 
@@ -128,15 +160,51 @@ app.get('/delete-contact/', (req, res) => {
     
     console.log(req.query);
 
-    let contactToBeDeleted = req.query;
+    // 60671e87b2db8245e00095f8
 
-    let deleteContactIndex = contactList.findIndex((contact, name) => {
+    let id1 = req.query.id;
 
-        return contact.phone == contactToBeDeleted.phone && contact.name == contactToBeDeleted.name;
+    // now we have id of the conytact which we have to delete and now 
+    // there are many function in database to delete a document
 
+    Contact.AllContact.findByIdAndDelete(id1, function(err) {
+        console.log("Error deleting contact from db");
+        return;
     });
 
-    contactList.splice(deleteContactIndex, 1);
+
+    // delete the same contact from favourites as well
+    Contact.FavouriteContact.find({}, function(err, favouriteList) {
+
+        if(err) {
+            console.log("Error fetching favourite contact from db");
+            return;
+        }
+
+        // console.log("Favourite List", favouriteList);
+
+        var id2 = -1;
+
+        for(let c of favouriteList){
+            if(c.name == req.query.name){
+                id2 = c.id;
+                break;
+            }
+        }
+
+        if(id2 != -1){
+
+            console.log("ID2 - ", id2);
+
+            Contact.FavouriteContact.findByIdAndDelete(id2, function(err2) {
+                console.log("Error deleting from favourite contact");
+                return;
+            });
+
+        }
+    });
+
+    // Contact.FavouriteContact.findByIdAndDelete()
 
     return res.redirect('back');
 
@@ -146,12 +214,23 @@ app.get('/delete-contact/', (req, res) => {
 
 app.get('/favourites', (req, res) => {
 
-    return res.render('home', {
+    // fetch favourite list from database
 
-        title : "Contact List",
-        contact_list : favouriteList
-    
-    });
+    Contact.FavouriteContact.find({}, function(err, favouriteList) {
+
+        if(err){
+            console.log("Error fetching favourite contact from db");
+            return;
+        }
+
+        return res.render('home', {
+
+            title : "Contact List",
+            contact_list : favouriteList
+        
+        });
+
+    });   
 
 });
 
@@ -163,24 +242,33 @@ app.get('/add-to-favourites/', (req, res) => {
 
     console.log(req.query);
 
-    if(favouriteList.includes(req.query)){
+    Contact.FavouriteContact.find({}, function(err, favouriteList) {
+
+        if(err){
+            console.log("Error Adding favourite contact to db");
+            return;
+        }
+
+        if(favouriteList.includes(req.query)){
         
-        let index = favouriteList.findIndex((contact, name) => {
-            return contact.phone == req.query.phone && name.name == req.query.name;
-        });
+            // let index = favouriteList.findIndex((contact, name) => {
+            //     return contact.phone == req.query.phone && name.name == req.query.name;
+            // });
+    
+            // favouriteList.splice(index, 1);
+    
+            return res.redirect('back');
+        }
+    
+        else{
+    
+            Contact.FavouriteContact.create(req.query);
+    
+            res.redirect('back');
+    
+        }
 
-        favouriteList.splice(index, 1);
-
-        return res.redirect('/favourites');
-    }
-
-    else{
-
-        favouriteList.push(req.query);
-
-        res.redirect('back');
-
-    }
+    });
 
 });
 
