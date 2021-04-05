@@ -2,7 +2,7 @@
 
 const express = require('express');
 const path = require('path'); // we do not need to install path module because its inbuilt in node modules
-const port = process.env.port || 5000;
+const port = process.env.port || 80;
 const db = require('./config/mongoose.js');
 
 const Contact = require('./models/contact');
